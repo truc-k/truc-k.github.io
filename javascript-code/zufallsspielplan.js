@@ -306,7 +306,9 @@ function turnierSpeichern() {
         spielfeldanzahl = zahlfeldSpielfeldanzahl;
 
         //wenn die Spielfeldanzahl begrenzt wurde, gibt es eventuell Pausenspieler, obwohl eigentlich alle spielen könnten
-        pausenspieleranzahl = spieleranzahl - (teamgroeße * teamanzahl * spielfeldanzahl);
+        if (teamgroeße * teamanzahl * spielfeldanzahl < spieleranzahl) {
+            pausenspieleranzahl = spieleranzahl - (teamgroeße * teamanzahl * spielfeldanzahl);
+        }
     } else {
         spielfeldanzahl = (spieleranzahl - pausenspieleranzahl) / (teamgroeße * teamanzahl);
     }
