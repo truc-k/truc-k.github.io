@@ -1,0 +1,32 @@
+#anzeige {
+    margin: 5%;
+    text-align: center;
+    font-size: 120%;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+[id^="anzeige-spielfeld-"] {
+    float: left;
+    margin: 5%;
+    background-color: lightblue;
+    font-weight: bold;
+    padding: 1%;
+}
+
+[id^="anzeige-team-"] {
+    /* border: black 1px solid; */
+}
+
+[id^="teammitglied-"] {
+    font-weight: normal;
+    margin-top:  10%;
+    margin-bottom: 10%;
+}
+
+#anzeige-pausenspieler {
+    float: right;
+    margin: 5%;
+    background-color: lightgray;
+    padding: 1%;
+}

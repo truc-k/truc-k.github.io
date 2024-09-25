@@ -1,0 +1,74 @@
+#button-neues-turnier {
+    display: none;
+}
+
+#button-initialisierung-aendern {
+    display: none;
+}
+
+#button-turnier-export {
+    display: none;
+}
+
+/* #button-turnier-import {
+    background-color: lightgray;
+    color: black;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+    margin-top: 1rem;
+} */
+
+#namen-spieler {
+    display: none;
+    float: left;
+}
+
+#namen-leistungsspieler {
+    display: none;
+}
+
+#anzahl-spieler-ohne-namen {
+    display: none;
+    float: left;
+}
+
+#anzahl-leistungsspieler {
+    display: none;
+}
+
+[id^="ergebnis-team-"] {
+    /* float: left; */
+}
+
+#ergebnisfenster {
+    /* padding: 2%; */
+}
+
+#button-ergebnisse-speichern {
+    display: none;
+    float: left;
+}
+
+#button-ergebnisse-abbrechen {
+    display: none;
+}
+
+[id^="bestenliste-"] {
+    float: left;
+    margin-right: 10%;
+}
+
+[id^="bestenliste-platzierungsabschnitt-"] {
+    display: flex;
+}
+
+#spielerergebnis {
+    position: absolute;
+    display: inline-block;
+    left: 0px;
+    top: 0px;
+    padding: 5px;
+    background-color: black;
+    color: white;
+}
