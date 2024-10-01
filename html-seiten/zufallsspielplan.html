@@ -1,0 +1,151 @@
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Zufallsspielplan</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="description" content="Generator zur Erstellung zufälliger Teams">
+    <meta name="author" content="Curt Kindler">
+</head>
+
+<body id="random-generator">
+    <div class="page-wrapper">
+
+        <nav data-scope="header">
+            <p class="logo">
+                <a href="./startseite.html" class="current" title="Spielplangenerator">Spielplangenerator</a>
+            </p>
+
+            <ul class="navigation">
+                <li class="random-generator">
+                    <a href="./zufallsspielplan.html" title="Zufallsspielplan">Zufallsspielplan</a>
+                </li>
+            </ul>
+        </nav>
+
+        <section class="intro" id="random-generator-intro">
+            <header role="banner">
+                <h1>Zufallsspielplan</h1>
+            </header>
+        </section>
+
+        <div id="initialisierung-turnier">
+            <!-- Hier werden die Turniereinstellungen erstmals eingestellt und zwischengespeichert und können im Turnierverlauf auch angepasst werden. -->
+
+            <div id="turniereinstellungen">
+                <!-- teamgroeße ist für die Anzahl der Spieler pro Team. -->
+                <label for="teamgroeße">Spieler pro Team</label>
+                <input id="teamgroeße" type="number" name="teamgroeße" placeholder="Anzahl hier eintragen">
+                <br>
+                <!-- teamanzahl ist für die Anzahl der Teams pro Spielfeld. -->
+                <label for="teamanzahl">Teams pro Spielfeld</label>
+                <input id="teamanzahl" type="number" name="teamanzahl" placeholder="Anzahl hier eintragen">
+                <br>
+                <!-- Die weiteren Einstellungen sind optional. -->
+                <!-- spielfeld-anzahl begrenzt die Zahl der Spielfelder, falls diese nur begrenzt zur Verfügung stehen. -->
+                <label for="spielfeld-anzahl">maximale Spielfeldanzahl</label>
+                <input id="spielfeld-anzahl" type="number" name="spielfeld-anzahl" placeholder="Anzahl hier eintragen">
+            </div>
+
+            <br>
+
+            <div id="spielernamen">
+                <input id="mit-namen" type="radio" name="spielerauswahl">
+                <label for="mit-namen">mit Namen</label>
+                <input id="ohne-namen" type="radio" name="spielerauswahl">
+                <label for="ohne-namen">ohne Namen</label>
+                <br>
+                <br>
+
+                <!-- Für den Fall, dass das Turnier mit Spielernamen gespielt werden soll, werden hier alle Spieler fortlaufend in eine neue Zeile / Textbox eingetragen. Es wird hier zwischen Leistungsspielern und sonstigen Spielern unterschieden. -->
+                <textarea id="namen-spieler" name="namen-spieler" placeholder="Spielernamen hier zeilenweise eintragen"
+                    rows="6"></textarea>
+                <textarea id="namen-leistungsspieler" name="namen-leistungsspieler"
+                    placeholder="Leistungsspieler hier zeilenweise eintragen" rows="6"></textarea>
+
+                <!-- Für den Fall, dass das Turnier ohne spezifische Spielernamen gespielt werden soll, kann hier die Spieleranzahl und die Leistungsspieleranzahl (optional) eingetragen werden. -->
+                <input type="number" id="anzahl-spieler-ohne-namen" name="anzahl-spieler"
+                    placeholder="Spieleranzahl eintragen" />
+                <input type="number" id="anzahl-leistungsspieler" name="anzahl-leistungsspieler"
+                    placeholder="Leistungsspieleranzahl" />
+
+            </div>
+
+            <br>
+
+            <input id="button-initialisierung-speichern" type="button" name="initialisierung-speichern"
+                value="speichern">
+            <input id="button-initialisierung-aendern" type="button" name="initialisierung-aendern" value="ändern">
+            <input id="button-turnier-export" type="button" name="turnier-export" value="Turnier exportieren">
+            <input id="button-turnier-import" type="file" name="turnier-import" value="Turnier importieren">
+            <!-- <label for="button-turnier-import">Turnier importieren</label> -->
+            <input id="button-neues-turnier" type="button" name="neues-turnier" value="neues Turnier erstellen">
+        </div>
+
+        <hr>
+
+        <div id="spielplan">
+            <!-- Hier kann der Spielplan eingesehen und erweitert werden. Zudem werden hier die Ergebnisse eingetragen. -->
+            <p>Spielplan / Ergebnisse</p>
+
+            <!-- im div "spielrunden" werden die Buttons für die einzelnen Spielrunden generiert -->
+            <div id="spielrunden" class="spielrunden-buttons"></div>
+
+            <!-- im div "ergebnisfenster" werden die Teams eingeblendet und die Ergebnisse werden hier eingetragen -->
+            <div id="ergebnisse">
+                <div id="ergebnisfenster"></div>
+                <button id="button-ergebnisse-speichern">Ergebnisse speichern</button>
+                <button id="button-ergebnisse-abbrechen">Abbrechen</button>
+                <button id="button-runde-loeschen">Runde löschen</button>
+            </div>
+            <button id="button-neue-runde">neue Runde generieren</button>
+        </div>
+
+        <div id="anzeigeeinstellungen">
+            <!-- Hier wird die Anzeige aufgerufen und die Spielfeldnamen eingetragen. -->
+            <label for="anzeige-runde">Anzeige für Runde</label>
+            <input id="anzeige-runde" type="number" name="anzeige-runde" placeholder="Rundennummer einfügen">
+            <input id="anzeige-naechste-runde" type="button" name="anzeige-naechste-runde"
+                value="nächste Runde anzeigen">
+            <label for="anzeige-spielfelder">Spielfelder</label>
+            <input id="anzeige-spielfelder" type="text" name="anzeige-spielfelder"
+                placeholder="Namen der einzelnen Spielfelder">
+
+        </div>
+
+        <hr>
+
+        <div id="bestenliste">
+            <p>Bestenliste</p>
+            <!-- Hier werden die Spieler nach ihren Ergebnissen entsprechend geranked. -->
+        </div>
+
+        <div id="spielerergebnis"></div>
+
+        <hr>
+
+        <div class="explanation" id="random-generator-explanation" role="article">
+            <h2>Kurzerklärung</h2>
+            <p>Zunächst wählt man die Anzahl der Spieler pro Team und die Anzahl der Teams pro Spielfeld aus. Außerdem kann man die Anzahl der verfügbaren Spielfelder einstellen, bestimmt man diese nicht selbst, wird diese Zahl automatisch vom System so festgelegt, dass möglichst viele Spieler gleichzeitig spielen können. Alle drei Angaben können im Verlauf des Turniers ständig angepasst bzw. verändert werden.</p>
+            <p>Danach entscheidet man sich, ob man die Spieler mit oder ohne Namen speichern möchte. Diese Angabe kann danach nicht mehr geändert werden. Entscheidet man sich für ein Turnier mit Namen trägt man nun alle Spielernamen in die Liste zeilenweise ein - die Besonderheit des Generators ist, dass man Leistungsspieler bestimmen kann, die zuerst auf alle Teams gleichmäßig verteilt werden und danach alle restlichen Spieler. Wählt man die Option ohne Namen werden die Spieler trägt man Anzahl der Spieler und eventuell Leistungsspieler in die Felder ein.</p>
+            <p>Schlussendlich kann man die Einstellungen speichern und kann nun Spielrunden mit den aktuellen Einstellung erstellen. Verändert man die Einstellungen, sind alle bereits erstellen Runden nicht von der Veränderung der Einstellungen betroffen.</p>
+            <h2>Die Idee</h2>
+            <p>Man hat eine beliebige Anzahl von Spielern, die man in möglichst vielen verschiedenen Teams in einzelnen Spielrunden gegeneinander spielen lassen möchte. Wirklich zufällig zusammengestellte Teams für jede Spielrunde händisch zu erstellen, gestaltet sich dabei jedoch gar nicht so einfach.</p>
+            <p>Dafür kommt dann diese Seite ins Spiel. Mit Hilfe ein paar einfacher Grundeinstellungen übernimmt der Generator die Erstellung von Teams und die Auswertung der Ergebnisse für jeden einzelnen Spieler.</p>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2024 Curt Kindler - v0.1.2-alpha</p>
+    </footer>
+
+    <!-- Verknüpfung für javascript-Code -->
+    <!-- Nach den HTML-Elementen, um EventListener nutzen zu können. s-->
+    <script type="text/javascript" src="./../javascript-code/zufallsspielplan.js"></script>
+    <!-- Verknüpfung für CSS-Code -->
+    <link rel="stylesheet" href="./../css-code/zufallsspielplan.css">
+</body>
+
+</html>

@@ -52,6 +52,12 @@
 
 #button-ergebnisse-abbrechen {
     display: none;
+    float: left;
+}
+
+#button-runde-loeschen {
+    display: none;
+
 }
 
 [id^="bestenliste-"] {
@@ -64,11 +70,10 @@
 }
 
 #spielerergebnis {
-    position: relative;
-    display: inline-block;
-    left: 0px;
-    top: 0px;
-    padding: 5px;
-    background-color: black;
-    color: white;
+    position: absolute;
+    display: none;
+    background-color: lightgray;
+    color: black;
+    border: black 1px solid;
 }
+

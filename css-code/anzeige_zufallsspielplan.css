@@ -1,17 +1,22 @@
+body {
+    font-size: clamp(1em, 2.5vw, 7em);
+}
+
 #anzeige {
-    margin: 5%;
     text-align: center;
-    font-size: 120%;
     align-items: center;
     font-family: Arial, Helvetica, sans-serif;
+    
+    /* Horizontale mittige Ausrichtung: */
+    display: flex;
+    justify-content: center;
 }
 
 [id^="anzeige-spielfeld-"] {
     float: left;
-    margin: 5%;
     background-color: lightblue;
     font-weight: bold;
-    padding: 1%;
+    margin-right: 5vw;
 }
 
 [id^="anzeige-team-"] {
@@ -20,13 +25,9 @@
 
 [id^="teammitglied-"] {
     font-weight: normal;
-    margin-top:  10%;
-    margin-bottom: 10%;
 }
 
 #anzeige-pausenspieler {
-    float: right;
-    margin: 5%;
+    float: left;
     background-color: lightgray;
-    padding: 1%;
 }
