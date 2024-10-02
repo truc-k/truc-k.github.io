@@ -22,8 +22,8 @@ window.onload = function () {
         let spieleranzahl = anzuzeigendeSpielrunde[0];
         let teamgroeße = Number(anzuzeigendeSpielrunde[1]);
         let teamanzahl = anzuzeigendeSpielrunde[2];
-        let pausenspieleranzahl = anzuzeigendeSpielrunde[4];
-        let spielfeldAnzahl = anzuzeigendeSpielrunde[5];
+        let pausenspieleranzahl = anzuzeigendeSpielrunde[3];
+        let spielfeldAnzahl = anzuzeigendeSpielrunde[4];
 
         //Abruf der Spielfeldnamen
         let spielfelder = JSON.parse(localStorage.getItem("anzeige-spielfelder"));

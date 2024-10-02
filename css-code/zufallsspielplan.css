@@ -21,19 +21,19 @@
 
 #namen-spieler {
     display: none;
-    float: left;
+    /* float: left; */
 }
 
-#namen-leistungsspieler {
+#leistungsgruppen-namen {
     display: none;
 }
 
 #anzahl-spieler-ohne-namen {
     display: none;
-    float: left;
+    /* float: left; */
 }
 
-#anzahl-leistungsspieler {
+#leistungsgruppen-zahlen {
     display: none;
 }
 
@@ -76,4 +76,5 @@
     color: black;
     border: black 1px solid;
 }
+
 

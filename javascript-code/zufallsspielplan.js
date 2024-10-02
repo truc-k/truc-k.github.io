@@ -10,9 +10,8 @@ window.onload = function () {
         let spieleranzahl = turniereinstellungenArray[0];
         let teamgroeße = turniereinstellungenArray[1];
         let teamanzahl = turniereinstellungenArray[2];
-        let leistungsspieleranzahl = turniereinstellungenArray[3];
-        let pausenspieleranzahl = turniereinstellungenArray[4];
-        let spielfeldAnzahl = turniereinstellungenArray[5];
+        let spielfeldAnzahl = turniereinstellungenArray[4];
+        let leistungsgruppenanzahl = turniereinstellungenArray[5];
 
         //Eintrag der Einstellungen aus Turnierarray
         let teamgroeßeZahlfeld = document.getElementById("teamgroeße");
@@ -23,6 +22,10 @@ window.onload = function () {
         teamanzahlZahlfeld.value = teamanzahl; //Eintrag der Teams pro Spielfeld
         teamanzahlZahlfeld.readOnly = true;
 
+        let leistungsgruppenanzahlZahlfeld = document.getElementById("leistungsgruppenanzahl");
+        leistungsgruppenanzahlZahlfeld.value = leistungsgruppenanzahl;
+        leistungsgruppenanzahlZahlfeld.readOnly = true;
+
         let spielfeldAnzahlZahlfeld = document.getElementById("spielfeld-anzahl");
         spielfeldAnzahlZahlfeld.value = spielfeldAnzahl; //Eintrag der (für die Spielerzahl) maximalen Spieleranzahl
         spielfeldAnzahlZahlfeld.readOnly = true;
@@ -31,7 +34,7 @@ window.onload = function () {
         let auswahlMitNamen = document.getElementById("mit-namen");
         let auswahlOhneName = document.getElementById("ohne-namen");
 
-        if (isNaN(turniereinstellungenArray[6])) {
+        if (isNaN(turniereinstellungenArray[6 + leistungsgruppenanzahl])) {
             //es sind Spielernamen eingetragen
             //Auswahl des Feldes für Nameneintrag und Deaktivierung beider Auswahlknöpfe
             auswahlMitNamen.click();
@@ -39,22 +42,23 @@ window.onload = function () {
             auswahlOhneName.disabled = true;
 
             //Eintrag der Namen der Spieler und Leistungsspieler
-            let namenSpielerArray;
+            let namenSpielerArray = turniereinstellungenArray.slice(6 + leistungsgruppenanzahl, turniereinstellungenArray.length);
 
-            if (leistungsspieleranzahl > 0) {
-                let namenLeistungsspielerArray = turniereinstellungenArray.slice(6, 6 + leistungsspieleranzahl);
-                namenSpielerArray = turniereinstellungenArray.slice(6 + leistungsspieleranzahl, turniereinstellungenArray.length);
+            if (leistungsgruppenanzahl > 1) {
 
-                let namenLeistungsspielerTextfeld = document.getElementById("namen-leistungsspieler");
-                namenLeistungsspielerTextfeld.value = namenLeistungsspielerArray.toString().replace(/,/g, "\n");
-                namenLeistungsspielerTextfeld.innerHTML.readOnly = true;
+                for (let leistungsgruppenzahl = 1; leistungsgruppenzahl <= leistungsgruppenanzahl; leistungsgruppenzahl++) {
+                    let leistungsgruppeTextfeld = document.getElementById("namen-leistungsgruppe-" + leistungsgruppenzahl);
+                    let namenLeistungsgruppeArray = namenSpielerArray.splice(0, turniereinstellungenArray[5 + leistungsgruppenzahl]);
+
+                    leistungsgruppeTextfeld.value = namenLeistungsgruppeArray.toString().replace(/,/g, "\n");
+                    leistungsgruppeTextfeld.readOnly = true;
+                }
+
             } else {
-                namenSpielerArray = turniereinstellungenArray.slice(6, turniereinstellungenArray.length);
+                let spielernamenTextfeld = document.getElementById("namen-spieler");
+                spielernamenTextfeld.value = namenSpielerArray.toString().replace(/,/g, "\n");
+                spielernamenTextfeld.readOnly = true;
             }
-
-            let namenSpielerTextfeld = document.getElementById("namen-spieler");
-            namenSpielerTextfeld.innerHTML = namenSpielerArray.toString().replace(/,/g, "\n");
-            namenSpielerTextfeld.readOnly = true;
 
         } else {
             //es sind Spielerzahlen eingetragen
@@ -63,14 +67,19 @@ window.onload = function () {
             auswahlOhneName.disabled = true;
             auswahlMitNamen.disabled = true;
 
-            //Eintrag der Spieler- und Leistungsspieleranzahl
+            //Eintrag der Spielerzahl
             let spieleranzahlZahlfeld = document.getElementById("anzahl-spieler-ohne-namen");
             spieleranzahlZahlfeld.value = spieleranzahl;
             spieleranzahlZahlfeld.readOnly = true;
 
-            let leistungsspieleranzahlZahlfeld = document.getElementById("anzahl-leistungsspieler");
-            leistungsspieleranzahlZahlfeld.value = leistungsspieleranzahl;
-            leistungsspieleranzahlZahlfeld.readOnly = true;
+            //Eintrag der Leistungsgruppenanzahl, wenn vorhanden
+            if (leistungsgruppenanzahl > 1) {
+                for (let leistungsgruppenzahl = 1; leistungsgruppenzahl <= leistungsgruppenanzahl; leistungsgruppenzahl++) {
+                    let leistungsgruppeZahlfeld = document.getElementById("anzahl-leistungsgruppe-" + leistungsgruppenzahl);
+                    leistungsgruppeZahlfeld.value = turniereinstellungenArray[5 + leistungsgruppenzahl];
+                    leistungsgruppeZahlfeld.readOnly = true;
+                }
+            }
         }
 
         //einfügen der Bestenlisten
@@ -122,36 +131,85 @@ document.getElementById("ohne-namen").addEventListener("click", spielernamenWahl
 function spielernamenWahl() {
 
     //Deklaration der Variablen
+    //Zahlfeld für Anzahl der Leistungsgruppem
+    let anzahlLeistungsgruppen = document.getElementById("leistungsgruppenanzahl").value;
+
     //Variablen Turnier mit Spielernamen
     let auswahlMitName = document.getElementById("mit-namen"); //Auswahlpunkt für Turnier mit Spielernamen
     let textfeldNamenSpieler = document.getElementById("namen-spieler"); //Abfragefeld für Spielernamen
-    let textfeldNamenLeistungsspieler = document.getElementById("namen-leistungsspieler"); //Abfragefeld für Leistungsspielernamen
+    let abschnittNamenLeistungsspieler = document.getElementById("leistungsgruppen-namen"); //div-Feld aller Abfragefelder für Leistungsspielernamen
 
     //Variablen Turnier ohne Spielernamen
     let auswahlOhneName = document.getElementById("ohne-namen"); //Auswahlpunkt für Turnier ohne Spielernamen
     let zahlfeldAnzahlSpieler = document.getElementById("anzahl-spieler-ohne-namen"); //Abfragefeld für Spieleranzahl
-    let zahlfeldAnzahlLeistungsspieler = document.getElementById("anzahl-leistungsspieler"); //Abfragefeld für Leistungsspieleranzahl
+    let abschnittAnzahlLeistungsspieler = document.getElementById("leistungsgruppen-zahlen"); //div-Feld aller Abfragefelder für Leistungsspieleranzahl
 
-    //if-Bedingung prüft, ob Auswahlfeld ausgewählt wird und ob die Felder für die Anzahl der Spieler und Leistungsspieler beschrieben sind
-    if (auswahlMitName.checked == true && zahlfeldAnzahlSpieler.value == "" && zahlfeldAnzahlLeistungsspieler.value == "") { //Einstellung für Turnier mit Namen
-        //Spieler- und Leistungsspielernamen können eingetragen werden, Zahlfelder sind nicht sichtbar
-        textfeldNamenSpieler.style.display = "block";
-        textfeldNamenLeistungsspieler.style.display = "block";
-        zahlfeldAnzahlSpieler.style.display = "none";
-        zahlfeldAnzahlLeistungsspieler.style.display = "none";
+    //if-Bedingung prüft, ob Auswahlfeld ausgewählt wurde, Leistungsgruppenanzahl eingegeben wurde und ob die Felder für die Anzahl der Spieler beschrieben ist
+    if (auswahlMitName.checked == true && zahlfeldAnzahlSpieler.value == "") { //Einstellung für Turnier mit Namen
 
-        //else-if-Bedingung prüft, ob Auswahlfeld ausgewählt wird und ob die Felder für die Spieler- und Leistungsspielernamen beschrieben sind
-    } else if (auswahlOhneName.checked == true && textfeldNamenSpieler.value == "" && textfeldNamenLeistungsspieler.value == "") { //Einstellungen für ein Turnier ohne Namen
-        //Zahlfelder für Spieler- und Leistungsspieleranzahl können eingetragen werden, Namensfelder sind nicht sichtbar
-        textfeldNamenSpieler.style.display = "none";
-        textfeldNamenLeistungsspieler.style.display = "none";
-        zahlfeldAnzahlSpieler.style.display = "block";
-        zahlfeldAnzahlLeistungsspieler.style.display = "block";
+        if (anzahlLeistungsgruppen > 1) {
+            //einfügen der Textfelder für die einzelnen Leistungsgruppen
+            let container = document.getElementById("leistungsgruppen-namen");
+            container.innerHTML = "";
+            for (let leistungsgruppenzahl = 1; leistungsgruppenzahl <= anzahlLeistungsgruppen; leistungsgruppenzahl++) {
+                let textfeld = document.createElement("textarea");
+                textfeld.id = "namen-leistungsgruppe-" + leistungsgruppenzahl;
+                textfeld.placeholder = "Namen der Spieler der Leistungsgruppe " + leistungsgruppenzahl;
+                textfeld.rows = "6";
+                container.appendChild(textfeld);
+            }
 
-    } else if (zahlfeldAnzahlSpieler.value != "" || zahlfeldAnzahlLeistungsspieler.value != "") {
+            abschnittNamenLeistungsspieler.style.display = "block";
+            abschnittAnzahlLeistungsspieler.style.display = "none";
+
+            textfeldNamenSpieler.style.display = "none";
+            zahlfeldAnzahlSpieler.style.display = "none";
+
+        } else {
+
+            abschnittNamenLeistungsspieler.style.display = "none";
+            abschnittAnzahlLeistungsspieler.style.display = "none";
+
+            textfeldNamenSpieler.style.display = "block";
+            zahlfeldAnzahlSpieler.style.display = "none";
+
+        }
+
+        //else-if-Bedingung prüft, ob Auswahlfeld ausgewählt wurde, Leistungsgruppenanzahl eingegeben wurde und ob die Felder für die Spielernamen beschrieben ist
+    } else if (auswahlOhneName.checked == true && textfeldNamenSpieler.value == "") { //Einstellungen für ein Turnier ohne Namen
+
+        if (anzahlLeistungsgruppen > 1) {
+            //einfügen der Zahlfelder für die Anzahl der Spieler pro Leistungsgruppe
+            let container = document.getElementById("leistungsgruppen-zahlen");
+            container.innerHTML = "";
+            for (let leistungsgruppenzahl = 1; leistungsgruppenzahl <= anzahlLeistungsgruppen; leistungsgruppenzahl++) {
+                let zahlfeld = document.createElement("input");
+                zahlfeld.id = "anzahl-leistungsgruppe-" + leistungsgruppenzahl;
+                zahlfeld.type = "number";
+                zahlfeld.placeholder = "davon Leistungsgruppe " + leistungsgruppenzahl;
+                container.appendChild(zahlfeld);
+            }
+
+            abschnittNamenLeistungsspieler.style.display = "none";
+            abschnittAnzahlLeistungsspieler.style.display = "block";
+
+            textfeldNamenSpieler.style.display = "none";
+            zahlfeldAnzahlSpieler.style.display = "block";
+
+        } else {
+
+            abschnittNamenLeistungsspieler.style.display = "none";
+            abschnittAnzahlLeistungsspieler.style.display = "none";
+
+            textfeldNamenSpieler.style.display = "none";
+            zahlfeldAnzahlSpieler.style.display = "block";
+
+        }
+
+    } else if (zahlfeldAnzahlSpieler.value != "") {
         //wenn eteas in einem Feld steht, wird die Auswahl nicht geändert
         auswahlOhneName.checked = true;
-    } else if (textfeldNamenSpieler.value != "" || textfeldNamenLeistungsspieler.value != "") {
+    } else if (textfeldNamenSpieler.value != "") {
         //wenn eteas in einem Feld steht, wird die Auswahl nicht geändert
         auswahlMitName.checked = true;
     }
@@ -164,10 +222,8 @@ document.getElementById("button-neues-turnier").addEventListener("click", neuesT
 function neuesTurnier() {
     if (confirm("Das bisherige Turnier wird gelöscht. \nFortfahren?") == true) {
         localStorage.clear();
-    } else {
-        return;
+        location.reload();
     }
-    location.reload();
 }
 
 //Event-Listener für Turnieränderung
@@ -178,17 +234,25 @@ function turnierAendern() {
     //es werden alle Einstellungsfenster für das Turnier "freigeschaltet"
     document.getElementById("teamgroeße").readOnly = false;
     document.getElementById("teamanzahl").readOnly = false;
+    document.getElementById("leistungsgruppenanzahl").readOnly = false;
     document.getElementById("spielfeld-anzahl").readOnly = false;
-    document.getElementById("mit-namen").disabled = false;
-    document.getElementById("ohne-namen").disabled = false;
+    // document.getElementById("mit-namen").disabled = false;
+    // document.getElementById("ohne-namen").disabled = false;
+    // Änderung der EInstellung mit oder ohne Namen nicht sinnvoll, da Speicherung bei null beginnt (kein Übertrag der Spielerergebnisse möglich)
 
-    //Turnier mit Spielernamen
     document.getElementById("namen-spieler").readOnly = false;
-    document.getElementById("namen-leistungsspieler").readOnly = false;
 
-    //Turnier ohne Spielernamen
     document.getElementById("anzahl-spieler-ohne-namen").readOnly = false;
-    document.getElementById("anzahl-leistungsspieler").readOnly = false;
+
+    let leistungsgruppenanzahl = document.getElementById("leistungsgruppenanzahl").value;
+    for (let leistungsgruppenzahl = 1; leistungsgruppenzahl <= leistungsgruppenanzahl; leistungsgruppenzahl++) {
+        if (document.getElementById("mit-namen").checked == true) {
+            document.getElementById("namen-leistungsgruppe-" + leistungsgruppenzahl).readOnly = false;
+        } else {
+            document.getElementById("anzahl-leistungsgruppe-" + leistungsgruppenzahl).readOnly = false;
+        }
+
+    }
 
     //einfügen des Speicher-Buttons und Ändern-Button verschwindet
     document.getElementById("button-initialisierung-speichern").style.display = "block";
@@ -206,6 +270,7 @@ function turnierSpeichern() {
     //allgemeine Variablen
     let teamgroeße = Number(document.getElementById("teamgroeße").value); //Spieler pro Team
     let teamanzahl = Number(document.getElementById("teamanzahl").value); //Teams pro Spielfeld
+    let leistungsgruppenanzahl = Number(document.getElementById("leistungsgruppenanzahl").value); //Anzahl der Leistungsgruppen
 
     //Felder für Turniereinstellungen mit oder ohne Namen
     let auswahlMitName = document.getElementById("mit-namen"); //Auswahlpunkt für Turnier mit Spielernamen
@@ -214,7 +279,7 @@ function turnierSpeichern() {
     let auswahlOhneName = document.getElementById("ohne-namen"); //Auswahlpunkt für Turnier ohne Spielernamen
     let zahlfeldAnzahlSpieler = document.getElementById("anzahl-spieler-ohne-namen"); //Abfragefeld für Spieleranzahl
 
-    if (!(teamgroeße > 0 && teamanzahl > 0 && ((auswahlMitName.checked == true && textfeldNamenSpieler.value !== "") || (auswahlOhneName.checked == true && zahlfeldAnzahlSpieler.value !== "")))) {
+    if (!(teamgroeße > 0 && teamanzahl > 0 && ((auswahlMitName.checked == true && (textfeldNamenSpieler.value !== "" || leistungsgruppenanzahl > 1) || (auswahlOhneName.checked == true && (zahlfeldAnzahlSpieler.value !== "" || leistungsgruppenanzahl > 1)))))) {
         alert("Nicht alle erforderlichen Angaben wurden getätigt.")
         return (false);
     }
@@ -223,43 +288,54 @@ function turnierSpeichern() {
     /*Aufbau Einstellungsarray: [0] - Spieleranzahl
                                 [1] - Teamgröße / Spieler pro Team
                                 [2] - Teamanzahl / Teams pro Spielfeld
-                                [3] - Leistungsspieleranzahl
-                                [4] - Pausenspieleranzahl
-                                [5] - Spielfeldanzahl
+                                [3] - Pausenspieleranzahl
+                                [4] - Spielfeldanzahl
+                                [5] - Leistungsgruppenanzahl
+                                [*] - Anzahl der Spieler pro Leistungsgruppe
                                 [*] - Namen aller Leistungsspieler
                                 [*] - Namen aller (restlichen) Spieler*/
 
     //Deklarierung Einstellungsvariablen
     let spieleranzahl; //Anzahl der Spieler bestimmt sich entweder aus der Anzahl der eingetragenen Namen der Spieler und Leistungsspieler (Turnier mit Namen) oder direkt aus der eingetragenen Spieleranzahl (Turnier ohne Namen)
-    let leistungsspieleranzahl = 0; //Anzahl der Leistungsspieler
 
-    //Arrays für Spielernamen
+    //Namensarray
     let namenSpielerArray = [];
-    let namenLeistungsspielerArray = [];
+    let leistungsgruppenArray = [];
 
     if (auswahlMitName.checked == true) {
-        //Eintrag aller Spielernamen in ein Array (leere Zeilen werden herausgefiltert)
-        namenSpielerArray = textfeldNamenSpieler.value.replace(/\r\n/g, "\n").split("\n").filter(line => line);
+
+        //Namensarray ohne
         //Eintrag aller Leistungsspielernamen, wenn vorhanden (leere Zeilen werden herausgefiltert)
-        let textfeldNamenLeistungsspieler = document.getElementById("namen-leistungsspieler"); //Textfeld für Eintragung der Namen der Leistungsspieler
-        if (textfeldNamenLeistungsspieler.value !== "") {
-            namenLeistungsspielerArray = textfeldNamenLeistungsspieler.value.replace(/\r\n/g, "\n").split("\n").filter(line => line);
-            leistungsspieleranzahl = namenLeistungsspielerArray.length;
+        if (leistungsgruppenanzahl > 1) {
+
+            for (let leistungsgruppenzahl = 1; leistungsgruppenzahl <= leistungsgruppenanzahl; leistungsgruppenzahl++) {
+
+                let textfeldLeistungsspieler = document.getElementById("namen-leistungsgruppe-" + leistungsgruppenzahl);
+                let namenLeistungsspielerGruppe = textfeldLeistungsspieler.value.replace(/\r\n/g, "\n").split("\n").filter(line => line);
+
+                namenSpielerArray = namenSpielerArray.concat(namenLeistungsspielerGruppe);
+                leistungsgruppenArray = leistungsgruppenArray.concat(namenLeistungsspielerGruppe.length);
+
+            }
+
+        } else {
+            //Eintrag aller Spielernamen in ein Array (leere Zeilen werden herausgefiltert)
+            namenSpielerArray = textfeldNamenSpieler.value.replace(/\r\n/g, "\n").split("\n").filter(line => line);
         }
-        spieleranzahl = Number(namenSpielerArray.length + leistungsspieleranzahl);
+
+        spieleranzahl = namenSpielerArray.length;
 
         //Überprüfen, ob jeder Spielername nur einmal vorkommt (sonst Fehler mit Spielerergebnisspeicher)
-        let namenAlleSpielerArray = namenLeistungsspielerArray.concat(namenSpielerArray);
         let namenAlleSpielerArrayOhneDopplung = [];
         let dopplungNamenAlleSpielerArray = [];
 
-        for (let spielerzahl = 0; spielerzahl < namenAlleSpielerArray.length; spielerzahl++) {
+        for (let spielerzahl = 0; spielerzahl < namenSpielerArray.length; spielerzahl++) {
             //Überprüfung, ob Name bereits in Spielerarray ohne Dopplung enthalten ist
-            if (namenAlleSpielerArrayOhneDopplung.indexOf(namenAlleSpielerArray[spielerzahl]) > -1 && dopplungNamenAlleSpielerArray.indexOf(namenAlleSpielerArray[spielerzahl]) == -1) {
+            if (namenAlleSpielerArrayOhneDopplung.indexOf(namenSpielerArray[spielerzahl]) > -1 && dopplungNamenAlleSpielerArray.indexOf(namenSpielerArray[spielerzahl]) == -1) {
                 //Eintrag in Spielerarray für doppelte Namen
-                dopplungNamenAlleSpielerArray.push(namenAlleSpielerArray[spielerzahl]);
+                dopplungNamenAlleSpielerArray.push(namenSpielerArray[spielerzahl]);
             }
-            namenAlleSpielerArrayOhneDopplung.push(namenAlleSpielerArray[spielerzahl]);
+            namenAlleSpielerArrayOhneDopplung.push(namenSpielerArray[spielerzahl]);
         }
         //Ausgabe der doppelten Namen, wenn vorhanden
         if (dopplungNamenAlleSpielerArray.length > 0) {
@@ -276,13 +352,23 @@ function turnierSpeichern() {
             namenSpielerArray.push(spielerzahl);
         }
 
-        //Bestimmung der Leistungsspieleranzahl, wenn diese eingetragen wurden
-        let zahlfeldAnzahlLeistungsspieler = document.getElementById("anzahl-leistungsspieler"); //Abfragefeld für Leistungsspieleranzahl
-        if (zahlfeldAnzahlLeistungsspieler.value !== "") {
-            leistungsspieleranzahl = zahlfeldAnzahlLeistungsspieler.value;
+        if (leistungsgruppenanzahl > 1) {
+            //Bestimmung der Leistungsspieleranzahl, wenn diese eingetragen wurden
+            for (let leistungsgruppenzahl = 1; leistungsgruppenzahl <= leistungsgruppenanzahl; leistungsgruppenzahl++) {
+                let anzahlLeistungsspielerGruppe = Number(document.getElementById("anzahl-leistungsgruppe-" + leistungsgruppenzahl).value);
+                leistungsgruppenArray.push(anzahlLeistungsspielerGruppe);
+            }
 
-            //Eintrag der Leistungsspieler in Leistungsspielerarray
-            namenLeistungsspielerArray = namenSpielerArray.splice(0, leistungsspieleranzahl);
+            //bestimmen der Anzahl der Spieler in allen Leistungsgruppen
+            let spieleranzahlLeistungsgruppen = 0;
+            for (let gruppenzahl = 0; gruppenzahl < leistungsgruppenArray.length; gruppenzahl++) {
+                spieleranzahlLeistungsgruppen += Number(leistungsgruppenArray[gruppenzahl]);
+            }
+
+            //wenn Leistungsgruppen bestimmt wurden, überprüfen, ob die Anzahl der Spieler pro Gruppe gleich mit der Spieleranzahl ist
+            if (spieleranzahlLeistungsgruppen != spieleranzahl) {
+                alert("Die Spieleranzahl pro Leistungsgruppe muss insgesamt mit der Gesamtspielerzahl übereinstimmen.\nAktuell sind es " + spieleranzahlLeistungsgruppen + " Spieler in den Leistungsgruppen und " + spieleranzahl + " Spieler insgesamt.");
+            }
         }
 
     } else {
@@ -296,6 +382,7 @@ function turnierSpeichern() {
         alert("Spieleranzahl (aktuell " + spieleranzahl + ") für angegebene Einstellungen nicht ausreichend. \nEs werden mindestens " + teamgroeße * teamanzahl + " Spieler benötigt.");
         return (false);
     }
+
     //Bestimmung der Anzahl der Pausenspieler
     let pausenspieleranzahl = spieleranzahl % (teamgroeße * teamanzahl);
 
@@ -314,7 +401,7 @@ function turnierSpeichern() {
     }
 
     //Eintragen der Grundeinstellungen für das Turnier
-    let turniereinstellungenArray = [spieleranzahl, teamgroeße, teamanzahl, leistungsspieleranzahl, pausenspieleranzahl, spielfeldanzahl];
+    let turniereinstellungenArray = [spieleranzahl, teamgroeße, teamanzahl, pausenspieleranzahl, spielfeldanzahl, leistungsgruppenanzahl];
 
     //Eintragen aller Spielernamen (bzw. -nummern) in Turniereinstellungsarray und Spielerergebnismap
     let spielerergebnisseMap;
@@ -325,20 +412,15 @@ function turnierSpeichern() {
         spielerergebnisseMap = new Map();
     }
 
-    if (leistungsspieleranzahl > 0) {
-        for (let spielerzahl = 0; spielerzahl < leistungsspieleranzahl; spielerzahl++) {
-            turniereinstellungenArray.push(namenLeistungsspielerArray[spielerzahl]);
+    if (leistungsgruppenanzahl > 1) {
 
-            //wenn Spieler bereits in der Spielerergebnismap vorhanden ist, wird dieser nicht neu gespeichert
-            if (!spielerergebnisseMap.get(namenLeistungsspielerArray[spielerzahl])) {
-                spielerergebnisseMap.set(namenLeistungsspielerArray[spielerzahl], JSON.stringify([0, 0, 0, 0, 0]));
-            }
-        }
+        turniereinstellungenArray = turniereinstellungenArray.concat(leistungsgruppenArray);
+
     }
 
-    for (let spielerzahl = 0; spielerzahl < spieleranzahl - leistungsspieleranzahl; spielerzahl++) {
-        turniereinstellungenArray.push(namenSpielerArray[spielerzahl]);
+    turniereinstellungenArray = turniereinstellungenArray.concat(namenSpielerArray);
 
+    for (let spielerzahl = 0; spielerzahl < spieleranzahl; spielerzahl++) {
         //wenn Spieler bereits in der Spielerergebnismap vorhanden ist, wird dieser nicht neu gespeichert
         if (!spielerergebnisseMap.get(namenSpielerArray[spielerzahl])) {
             spielerergebnisseMap.set(namenSpielerArray[spielerzahl], JSON.stringify([0, 0, 0, 0, 0]));
@@ -385,16 +467,11 @@ function neueRundeGenerieren() {
     let spieleranzahl = turniereinstellungenArray[0]; //Anzahl der Spieler des Turniers (inklusive Leistungsspieler)
     let teamgroeße = turniereinstellungenArray[1]; //Teamgröße / Spieler pro Team
     let teamanzahl = turniereinstellungenArray[2]; //Teamanzahl / Teams pro Spielfeld
-    let leistungsspieleranzahl = turniereinstellungenArray[3]; //Anzahl der Leistungsspieler
-    let pausenspieleranzahl = turniereinstellungenArray[4]; //Anzahl der Pausenspieler
-    let spielfeldAnzahl = turniereinstellungenArray[5]; //Anzahl der möglichen (maximalen) Spielfelder
+    let pausenspieleranzahl = turniereinstellungenArray[3]; //Anzahl der Pausenspieler
+    let spielfeldAnzahl = turniereinstellungenArray[4]; //Anzahl der möglichen (maximalen) Spielfelder
+    let leistungsgruppenanzahl = turniereinstellungenArray[5]; //Anzahl der Leistungsgruppen
 
-    let namenAlleSpielerArray = turniereinstellungenArray.slice(6, turniereinstellungenArray.length); //Namen aller Spieler (inklusive Leistungsspieler)
-    let namenSpielerArray = turniereinstellungenArray.slice(6 + leistungsspieleranzahl, turniereinstellungenArray.length); //Namen aller Spieler (ohne Leistungsspieler)
-    let namenLeistungsspielerArray = turniereinstellungenArray.slice(6, 6 + leistungsspieleranzahl); //Namen aller Leistungsspieler
-
-    //Die Zuordnung der Pausenspieler ist noch fehlerhaft, da ein Problem entsteht, wenn der letzte Pausenspieler der letzten Runde nicht mehr mitgespielt.
-    //der folgenden Abschnitt kann vereinfacht geschrieben werden und das wird in Zukunft noch passieren
+    let namenSpielerArray = turniereinstellungenArray.slice(6 + leistungsgruppenanzahl, turniereinstellungenArray.length); //Namen aller Spieler (inklusive Leistungsspieler)
 
     //Bestimmung der Pausenspieler, wenn nötig
     let pausenspielerArray = []; //Namen aller Pausenspieler
@@ -408,12 +485,12 @@ function neueRundeGenerieren() {
             let vorherigeSpielrundeArray = JSON.parse(spielrundenMap.get("runde-" + (runde - 1))); //Array der vorherigen Spielrunde
 
             //bestimmen des Arrays zur Bestimmung der Pausenspieler
-            if (vorherigeSpielrundeArray[4] == 0) {
+            if (vorherigeSpielrundeArray[3] == 0) {
                 //wenn es in der vorherigen Spielrunde keine Pausenspieler gab, beginnt die Zählung mit dem ersten Spieler im Array
                 namenAlleSpielerTurnierNeuArray = namenAlleSpielerTurnierArray;
             } else {
                 //wenn es Pausenspieler gab, wird die Stelle des letzten Pausenspielers bestimmt und an der Stelle das Array neu zusammengesetzt
-                let zahlLetzterPausenspieler = namenAlleSpielerTurnierArray.indexOf(vorherigeSpielrundeArray[5 + vorherigeSpielrundeArray[4]]); //es wird die Stelle des letzten Pausenspielers aus dem Gesamtturnierspielerarray gesucht
+                let zahlLetzterPausenspieler = namenAlleSpielerTurnierArray.indexOf(vorherigeSpielrundeArray[5 + vorherigeSpielrundeArray[3]]); //es wird die Stelle des letzten Pausenspielers aus dem Gesamtturnierspielerarray gesucht
 
                 //nun wird das Gesamtturnierspielerarray umgestellt, damit die Spieler die bereits Pause hatten, in der Reihenfolge weiter hinten sind
                 let spielerBereitsPauseArray = namenAlleSpielerTurnierArray.splice(0, zahlLetzterPausenspieler + 1);
@@ -428,7 +505,7 @@ function neueRundeGenerieren() {
         //suchen des nächsten Pausenspielers, der an der aktuellen Spielrunde teilnimmt
         let zahlNaechsterPausenspieler;
         for (let spielerzahl = 0; spielerzahl < namenAlleSpielerTurnierNeuArray.length; spielerzahl++) {
-            if (namenAlleSpielerArray.indexOf(namenAlleSpielerTurnierNeuArray[spielerzahl]) > -1) {
+            if (namenSpielerArray.indexOf(namenAlleSpielerTurnierNeuArray[spielerzahl]) > -1) {
                 zahlNaechsterPausenspieler = namenAlleSpielerTurnierNeuArray.indexOf(namenAlleSpielerTurnierNeuArray[spielerzahl]);
                 break;
             }
@@ -436,50 +513,70 @@ function neueRundeGenerieren() {
 
         //bestimmen der Pausenspieler
         for (let spielerzahl = zahlNaechsterPausenspieler; spielerzahl < pausenspieleranzahl + zahlNaechsterPausenspieler; spielerzahl++) {
-            if (namenAlleSpielerArray.indexOf(namenAlleSpielerTurnierNeuArray[spielerzahl]) > -1) {
+            if (namenSpielerArray.indexOf(namenAlleSpielerTurnierNeuArray[spielerzahl]) > -1) {
                 pausenspielerArray.push(namenAlleSpielerTurnierNeuArray[spielerzahl]);
             }
         }
 
-        //Nun werden aus den Einzelarrays, die für die Teamzuordnung nötig sind, die Pausenspieler entfernt.
+        //Nun werden aus den Spielernamenarray, die für die Teamzuordnung nötig sind, die Pausenspieler entfernt.
         for (let i = 0; i <= pausenspieleranzahl - 1; i++) {
             if (namenSpielerArray.indexOf(pausenspielerArray[i]) > -1) {
                 namenSpielerArray.splice(namenSpielerArray.indexOf(pausenspielerArray[i]), 1);
-            } else if (namenLeistungsspielerArray.indexOf(pausenspielerArray[i]) > -1) {
-                namenLeistungsspielerArray.splice(namenLeistungsspielerArray.indexOf(pausenspielerArray[i]), 1);
             }
         }
-    }
-
-    //jetzt werden beide Spielernamenarrays gemischt
-    for (var i = namenLeistungsspielerArray.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        [namenLeistungsspielerArray[i], namenLeistungsspielerArray[j]] = [namenLeistungsspielerArray[j], namenLeistungsspielerArray[i]];
-    }
-
-    for (var i = namenSpielerArray.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        [namenSpielerArray[i], namenSpielerArray[j]] = [namenSpielerArray[j], namenSpielerArray[i]];
     }
 
     //Speichern der Spielrunde in einem Array
     /*Aufbau Spielrundenarray:  [0] - Spieleranzahl
                                 [1] - Teamgröße / Spieler pro Team
                                 [2] - Teamanzahl / Teams pro Spielfeld
-                                [3] - Leistungsspieleranzahl
-                                [4] - Pausenspieleranzahl
-                                [5] - Spielfeldanzahl
+                                [3] - Pausenspieleranzahl
+                                [4] - Spielfeldanzahl
+                                [5] - Leistungsgruppenanzahl
                                 [*] - Namen aller Pausenspieler
-                                [*] - Namen der restlichen Spieler (zuerst Leistungs-, dann alle anderen Spieler)
+                                [*] - Teamzuordnung
     */
 
-    //Nun wird das Spielrundenarray mit den Initialeinstellungen, den Pausenspielern und der Spielermischung erstellt.
-    let spielrunde;
-    if (pausenspieleranzahl < 1) {
-        //wenn es keine Pausenspieler gibt, wird das Pausenspielerarray nicht mit eingefügt
-        spielrunde = [spieleranzahl, teamgroeße, teamanzahl, leistungsspieleranzahl, pausenspieleranzahl, spielfeldAnzahl].concat(namenLeistungsspielerArray.concat(namenSpielerArray));
+    let spielrunde = [spieleranzahl, teamgroeße, teamanzahl, pausenspieleranzahl, spielfeldAnzahl, leistungsgruppenanzahl];
+    if (pausenspieleranzahl > 0) {
+        //einfügen der Pausenspieler, wenn vorhanden
+        spielrunde = spielrunde.concat(pausenspielerArray);
+    }
+
+    if (leistungsgruppenanzahl > 1) {
+
+        //Es werden die einzelnen Leistungsgruppenarrays erstellt (Pausenspieler werden berücksichtigt), gemischt und anschließend in das spielrundenarray eingefügt
+        let namenAlleSpielerArray = turniereinstellungenArray.slice(6 + leistungsgruppenanzahl, turniereinstellungenArray.length);
+
+        for (let leistungsgruppenzahl = 1; leistungsgruppenzahl <= leistungsgruppenanzahl; leistungsgruppenzahl++) {
+            let namenLeistungsgruppeArray = namenAlleSpielerArray.splice(0, turniereinstellungenArray[5 + leistungsgruppenzahl]);
+
+            //überprüfen, ob Spieler der Leistungsgruppe in der aktuellen Runde Pause haben und wenn ja, diese aus Namensarray entfernen
+            for (let spielerzahl = 0; spielerzahl < namenLeistungsgruppeArray.length - 1; spielerzahl++) {
+                if (namenLeistungsgruppeArray.indexOf(pausenspielerArray[spielerzahl]) > -1) {
+                    namenLeistungsgruppeArray.splice(namenLeistungsgruppeArray.indexOf(pausenspielerArray[spielerzahl]), 1);
+                }
+            }
+
+            //Spielernamenarray mischen, wenn mehr als ein Spieler in Array gespeichert ist
+            if (namenLeistungsgruppeArray.length > 1) {
+                for (var i = namenLeistungsgruppeArray.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    [namenLeistungsgruppeArray[i], namenLeistungsgruppeArray[j]] = [namenLeistungsgruppeArray[j], namenLeistungsgruppeArray[i]];
+                }
+            }
+
+            //einfügen der aktuellen Leistungsgruppenspielernamen in Spielrundenarray
+            spielrunde = spielrunde.concat(namenLeistungsgruppeArray);
+        }
     } else {
-        spielrunde = [spieleranzahl, teamgroeße, teamanzahl, leistungsspieleranzahl, pausenspieleranzahl, spielfeldAnzahl].concat(pausenspielerArray.concat(namenLeistungsspielerArray.concat(namenSpielerArray)));
+        //mischen des Spielernamenarrays
+        for (var i = namenSpielerArray.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            [namenSpielerArray[i], namenSpielerArray[j]] = [namenSpielerArray[j], namenSpielerArray[i]];
+        }
+        //einfügen der Spielernamen in Spielrundenarray
+        spielrunde = spielrunde.concat(namenSpielerArray);
     }
 
     //Speichern der erstellen Spielrunde in der Map
@@ -530,7 +627,7 @@ function rundeOeffnen(event) {
     //Turniereinstellungen aus Rundenarray abrufen
     let spieleranzahl = Number(aufgerufeneSpielrunde[0]);
     let teamgroeße = aufgerufeneSpielrunde[1];
-    let pausenspieleranzahl = aufgerufeneSpielrunde[4];
+    let pausenspieleranzahl = aufgerufeneSpielrunde[3];
 
     let teamanzahl = (spieleranzahl - pausenspieleranzahl) / teamgroeße; //Anzahl der Teams für die Spielrunde
     let teamzuordnung = aufgerufeneSpielrunde.slice(6 + pausenspieleranzahl, aufgerufeneSpielrunde.length); //Array mit allen aktiven Spielern (also ohne Pausenspieler)
@@ -601,7 +698,7 @@ function rundeErgebnisSpeichern() {
     //Turniereinstellungen aus Rundenarray abrufen
     let spieleranzahl = Number(aktuelleSpielrunde[0]);
     let teamgroeße = Number(aktuelleSpielrunde[1]);
-    let pausenspieleranzahl = Number(aktuelleSpielrunde[4]);
+    let pausenspieleranzahl = Number(aktuelleSpielrunde[3]);
 
     //Anzahl der Teams für die Spielrunde
     let teamanzahl = (spieleranzahl - pausenspieleranzahl) / teamgroeße;
@@ -729,7 +826,7 @@ function rundeLoeschen() {
     //Turniereinstellungen aus Rundenarray abrufen
     let spieleranzahl = Number(aktuelleSpielrunde[0]);
     let teamgroeße = Number(aktuelleSpielrunde[1]);
-    let pausenspieleranzahl = Number(aktuelleSpielrunde[4]);
+    let pausenspieleranzahl = Number(aktuelleSpielrunde[3]);
 
     //Anzahl der Teams für die Spielrunde
     let teamanzahl = (spieleranzahl - pausenspieleranzahl) / teamgroeße;
@@ -761,7 +858,7 @@ function spielerergebnisKorrigieren() {
     //Turniereinstellungen aus Rundenarray abrufen
     let spieleranzahl = Number(aktuelleSpielrunde[0]);
     let teamgroeße = Number(aktuelleSpielrunde[1]);
-    let pausenspieleranzahl = Number(aktuelleSpielrunde[4]);
+    let pausenspieleranzahl = Number(aktuelleSpielrunde[3]);
 
     //Anzahl der Teams für die Spielrunde
     let teamanzahl = (spieleranzahl - pausenspieleranzahl) / teamgroeße;

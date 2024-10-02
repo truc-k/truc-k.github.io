@@ -42,6 +42,11 @@
                 <label for="teamanzahl">Teams pro Spielfeld</label>
                 <input id="teamanzahl" type="number" name="teamanzahl" placeholder="Anzahl hier eintragen">
                 <br>
+                <!-- leistungsgruppenanzahl ist für die Anzahl der Leistungsgruppen. -->
+                <label for="leistungsgruppenanzahl">Anzahl der Leistungsgruppen</label>
+                <input id="leistungsgruppenanzahl" type="number" name="leistungsgruppenanzahl"
+                    placeholder="Anzahl hier eintragen">
+                <br>
                 <!-- Die weiteren Einstellungen sind optional. -->
                 <!-- spielfeld-anzahl begrenzt die Zahl der Spielfelder, falls diese nur begrenzt zur Verfügung stehen. -->
                 <label for="spielfeld-anzahl">maximale Spielfeldanzahl</label>
@@ -61,14 +66,12 @@
                 <!-- Für den Fall, dass das Turnier mit Spielernamen gespielt werden soll, werden hier alle Spieler fortlaufend in eine neue Zeile / Textbox eingetragen. Es wird hier zwischen Leistungsspielern und sonstigen Spielern unterschieden. -->
                 <textarea id="namen-spieler" name="namen-spieler" placeholder="Spielernamen hier zeilenweise eintragen"
                     rows="6"></textarea>
-                <textarea id="namen-leistungsspieler" name="namen-leistungsspieler"
-                    placeholder="Leistungsspieler hier zeilenweise eintragen" rows="6"></textarea>
+                <div id="leistungsgruppen-namen"></div>
 
                 <!-- Für den Fall, dass das Turnier ohne spezifische Spielernamen gespielt werden soll, kann hier die Spieleranzahl und die Leistungsspieleranzahl (optional) eingetragen werden. -->
-                <input type="number" id="anzahl-spieler-ohne-namen" name="anzahl-spieler"
+                <input id="anzahl-spieler-ohne-namen" type="number" name="anzahl-spieler"
                     placeholder="Spieleranzahl eintragen" />
-                <input type="number" id="anzahl-leistungsspieler" name="anzahl-leistungsspieler"
-                    placeholder="Leistungsspieleranzahl" />
+                <div id="leistungsgruppen-zahlen"></div>
 
             </div>
 
@@ -127,18 +130,35 @@
 
         <div class="explanation" id="random-generator-explanation" role="article">
             <h2>Kurzerklärung</h2>
-            <p>Zunächst wählt man die Anzahl der Spieler pro Team und die Anzahl der Teams pro Spielfeld aus. Außerdem kann man die Anzahl der verfügbaren Spielfelder einstellen, bestimmt man diese nicht selbst, wird diese Zahl automatisch vom System so festgelegt, dass möglichst viele Spieler gleichzeitig spielen können. Alle drei Angaben können im Verlauf des Turniers ständig angepasst bzw. verändert werden.</p>
-            <p>Danach entscheidet man sich, ob man die Spieler mit oder ohne Namen speichern möchte. Diese Angabe kann danach nicht mehr geändert werden. Entscheidet man sich für ein Turnier mit Namen trägt man nun alle Spielernamen in die Liste zeilenweise ein - die Besonderheit des Generators ist, dass man Leistungsspieler bestimmen kann, die zuerst auf alle Teams gleichmäßig verteilt werden und danach alle restlichen Spieler. Wählt man die Option ohne Namen werden die Spieler trägt man Anzahl der Spieler und eventuell Leistungsspieler in die Felder ein.</p>
-            <p>Schlussendlich kann man die Einstellungen speichern und kann nun Spielrunden mit den aktuellen Einstellung erstellen. Verändert man die Einstellungen, sind alle bereits erstellen Runden nicht von der Veränderung der Einstellungen betroffen.</p>
+            <p>Zunächst wählt man die Anzahl der Spieler pro Team und die Anzahl der Teams pro Spielfeld aus. Zudem
+                wählt man die Anzahl der Leistungsgruppen aus. Dieser Wert muss entweder mindestens zwei sein oder leer
+                bleiben. Bleibt er leer (=0), sind alle Spielr gleichrangig und werden beliebig zu Teams
+                zusammengestellt. Trägt man mindestens zwei ein, werden die Spieler mindestens auf zwei Leistungsgruppen
+                aufgeteilt. Die Teamzuordnung startet dann mit den Spielern der ersten Leistungsgruppe und danach dann
+                mit den weiteren Leistungsgruppen in absteigender Reihenfolge. Außerdem kann man die Anzahl der verfügbaren Spielfelder einstellen, bestimmt man diese nicht selbst, wird diese
+                Zahl automatisch vom System so festgelegt, dass möglichst viele Spieler gleichzeitig spielen können.
+                Alle drei Angaben können im Verlauf des Turniers ständig angepasst bzw. verändert werden.</p>
+            <p>Danach entscheidet man sich, ob man die Spieler mit oder ohne Namen speichern möchte. Diese Angabe kann
+                danach nicht mehr geändert werden. Entscheidet man sich für ein Turnier mit Namen trägt man nun alle
+                Spielernamen in die Liste zeilenweise ein - die Besonderheit des Generators ist, dass man
+                Leistungsspieler bestimmen kann, die zuerst auf alle Teams gleichmäßig verteilt werden und danach alle
+                restlichen Spieler. Wählt man die Option ohne Namen werden die Spieler trägt man Anzahl der Spieler und
+                eventuell Leistungsspieler in die Felder ein.</p>
+            <p>Schlussendlich kann man die Einstellungen speichern und kann nun Spielrunden mit den aktuellen
+                Einstellung erstellen. Verändert man die Einstellungen, sind alle bereits erstellen Runden nicht von der
+                Veränderung der Einstellungen betroffen.</p>
             <h2>Die Idee</h2>
-            <p>Man hat eine beliebige Anzahl von Spielern, die man in möglichst vielen verschiedenen Teams in einzelnen Spielrunden gegeneinander spielen lassen möchte. Wirklich zufällig zusammengestellte Teams für jede Spielrunde händisch zu erstellen, gestaltet sich dabei jedoch gar nicht so einfach.</p>
-            <p>Dafür kommt dann diese Seite ins Spiel. Mit Hilfe ein paar einfacher Grundeinstellungen übernimmt der Generator die Erstellung von Teams und die Auswertung der Ergebnisse für jeden einzelnen Spieler.</p>
+            <p>Man hat eine beliebige Anzahl von Spielern, die man in möglichst vielen verschiedenen Teams in einzelnen
+                Spielrunden gegeneinander spielen lassen möchte. Wirklich zufällig zusammengestellte Teams für jede
+                Spielrunde händisch zu erstellen, gestaltet sich dabei jedoch gar nicht so einfach.</p>
+            <p>Dafür kommt dann diese Seite ins Spiel. Mit Hilfe ein paar einfacher Grundeinstellungen übernimmt der
+                Generator die Erstellung von Teams und die Auswertung der Ergebnisse für jeden einzelnen Spieler.</p>
         </div>
 
     </div>
 
     <footer>
-        <p>© 2024 Curt Kindler - v0.1.3-alpha</p>
+        <p>© 2024 Curt Kindler - v0.2.1-alpha (Testversion)</p>
     </footer>
 
     <!-- Verknüpfung für javascript-Code -->
