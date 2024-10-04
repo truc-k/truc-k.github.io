@@ -29,7 +29,7 @@ window.onload = function () {
         let spielfelder = JSON.parse(localStorage.getItem("anzeige-spielfelder"));
 
         //Array mit allen aktiven Spielern (also ohne Pausenspieler)
-        let teamzuordnung = anzuzeigendeSpielrunde.slice(6 + pausenspieleranzahl, anzuzeigendeSpielrunde.length);
+        let teamzuordnung = anzuzeigendeSpielrunde.slice(5 + pausenspieleranzahl, anzuzeigendeSpielrunde.length);
 
         //Abruf der Teams und Eintrag auf Anzeige zugeordnet auf die Spielfelder in Abhängigkeit der Teams pro Spielfeld
         for (let spielfeldzahl = 0; spielfeldzahl < spielfeldAnzahl; spielfeldzahl++) {

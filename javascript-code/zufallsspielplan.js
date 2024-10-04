@@ -532,12 +532,11 @@ function neueRundeGenerieren() {
                                 [2] - Teamanzahl / Teams pro Spielfeld
                                 [3] - Pausenspieleranzahl
                                 [4] - Spielfeldanzahl
-                                [5] - Leistungsgruppenanzahl
                                 [*] - Namen aller Pausenspieler
                                 [*] - Teamzuordnung
     */
 
-    let spielrunde = [spieleranzahl, teamgroeße, teamanzahl, pausenspieleranzahl, spielfeldAnzahl, leistungsgruppenanzahl];
+    let spielrunde = [spieleranzahl, teamgroeße, teamanzahl, pausenspieleranzahl, spielfeldAnzahl];
     if (pausenspieleranzahl > 0) {
         //einfügen der Pausenspieler, wenn vorhanden
         spielrunde = spielrunde.concat(pausenspielerArray);
@@ -630,7 +629,7 @@ function rundeOeffnen(event) {
     let pausenspieleranzahl = aufgerufeneSpielrunde[3];
 
     let teamanzahl = (spieleranzahl - pausenspieleranzahl) / teamgroeße; //Anzahl der Teams für die Spielrunde
-    let teamzuordnung = aufgerufeneSpielrunde.slice(6 + pausenspieleranzahl, aufgerufeneSpielrunde.length); //Array mit allen aktiven Spielern (also ohne Pausenspieler)
+    let teamzuordnung = aufgerufeneSpielrunde.slice(5 + pausenspieleranzahl, aufgerufeneSpielrunde.length); //Array mit allen aktiven Spielern (also ohne Pausenspieler)
 
     //Bereich, in den Teams und Ergebnisfenster eingefügt werden
     let container = document.getElementById("ergebnisfenster");
@@ -704,14 +703,14 @@ function rundeErgebnisSpeichern() {
     let teamanzahl = (spieleranzahl - pausenspieleranzahl) / teamgroeße;
 
     //wenn bereits Ergebnis eingetragen wurde, wird dieses erst korrigiert
-    if (aktuelleSpielrunde.length == 6 + spieleranzahl + teamanzahl) {
+    if (aktuelleSpielrunde.length == 5 + spieleranzahl + teamanzahl) {
         spielerergebnisKorrigieren();
         aktuelleSpielrunde = JSON.parse(spielrundenMap.get("runde-" + runde));
     }
 
     //Eintrag der Ergebnisse in Spielrundenarray
     for (let teamzahl = 1; teamzahl <= teamanzahl; teamzahl++) {
-        aktuelleSpielrunde[5 + spieleranzahl + teamzahl] = document.getElementById("ergebnis-team-" + teamzahl).value;
+        aktuelleSpielrunde[4 + spieleranzahl + teamzahl] = document.getElementById("ergebnis-team-" + teamzahl).value;
     }
 
     //speichern der Ergebnisse im Rundenarray
@@ -719,7 +718,7 @@ function rundeErgebnisSpeichern() {
     localStorage.spielrunden = JSON.stringify(Array.from(spielrundenMap.entries()));
 
     //Array mit allen aktiven Spielern (also ohne Pausenspieler)
-    let teamzuordnung = aktuelleSpielrunde.slice(6 + pausenspieleranzahl, aktuelleSpielrunde.length);
+    let teamzuordnung = aktuelleSpielrunde.slice(5 + pausenspieleranzahl, aktuelleSpielrunde.length);
 
     //Map für Speicher der Spielerergebnisse
     let spielerergebnisseMap = new Map(JSON.parse(localStorage.spielerergebnisse));
@@ -737,11 +736,11 @@ function rundeErgebnisSpeichern() {
         let ergebnis;
         let ergebnisGegner;
         if (teamzahl % 2 == 0) {
-            ergebnis = Number(aktuelleSpielrunde[6 + spieleranzahl + teamzahl]);
-            ergebnisGegner = Number(aktuelleSpielrunde[7 + spieleranzahl + teamzahl]);
+            ergebnis = Number(aktuelleSpielrunde[5 + spieleranzahl + teamzahl]);
+            ergebnisGegner = Number(aktuelleSpielrunde[6 + spieleranzahl + teamzahl]);
         } else {
-            ergebnis = Number(aktuelleSpielrunde[6 + spieleranzahl + teamzahl]);
-            ergebnisGegner = Number(aktuelleSpielrunde[5 + spieleranzahl + teamzahl]);
+            ergebnis = Number(aktuelleSpielrunde[5 + spieleranzahl + teamzahl]);
+            ergebnisGegner = Number(aktuelleSpielrunde[4 + spieleranzahl + teamzahl]);
         }
 
         //Berechnung der Punktedifferenz
@@ -864,7 +863,7 @@ function spielerergebnisKorrigieren() {
     let teamanzahl = (spieleranzahl - pausenspieleranzahl) / teamgroeße;
 
     //Array mit allen aktiven Spielern (also ohne Pausenspieler)
-    let teamzuordnung = aktuelleSpielrunde.slice(6 + pausenspieleranzahl, aktuelleSpielrunde.length);
+    let teamzuordnung = aktuelleSpielrunde.slice(5 + pausenspieleranzahl, aktuelleSpielrunde.length);
 
     //Map für Speicher der Spielerergebnisse
     let spielerergebnisseMap = new Map(JSON.parse(localStorage.spielerergebnisse));
@@ -882,11 +881,11 @@ function spielerergebnisKorrigieren() {
         let ergebnis;
         let ergebnisGegner;
         if (teamzahl % 2 == 0) {
-            ergebnis = Number(aktuelleSpielrunde[6 + spieleranzahl + teamzahl]);
-            ergebnisGegner = Number(aktuelleSpielrunde[7 + spieleranzahl + teamzahl]);
+            ergebnis = Number(aktuelleSpielrunde[5 + spieleranzahl + teamzahl]);
+            ergebnisGegner = Number(aktuelleSpielrunde[6 + spieleranzahl + teamzahl]);
         } else {
-            ergebnis = Number(aktuelleSpielrunde[6 + spieleranzahl + teamzahl]);
-            ergebnisGegner = Number(aktuelleSpielrunde[5 + spieleranzahl + teamzahl]);
+            ergebnis = Number(aktuelleSpielrunde[5 + spieleranzahl + teamzahl]);
+            ergebnisGegner = Number(aktuelleSpielrunde[4 + spieleranzahl + teamzahl]);
         }
 
         //Berechnung der Punktedifferenz
