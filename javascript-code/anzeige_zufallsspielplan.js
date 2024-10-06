@@ -63,7 +63,7 @@ window.onload = function () {
         //Pausenspieler, wenn vorhanden
         if (pausenspieleranzahl != 0) {
             //Array mit allen Pausenspielern
-            let allePausenspieler = anzuzeigendeSpielrunde.slice(6, 6 + pausenspieleranzahl);
+            let allePausenspieler = anzuzeigendeSpielrunde.slice(5, 5 + pausenspieleranzahl);
 
             let abschnittPausenspieler = document.createElement("div");
             abschnittPausenspieler.innerText = "Pausenspieler";
