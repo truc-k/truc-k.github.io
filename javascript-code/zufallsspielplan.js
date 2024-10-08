@@ -669,7 +669,7 @@ function rundeOeffnen(event) {
         if (aufgerufeneSpielrunde[6 + spieleranzahl + i] === undefined) {
             ergebnisbox.placeholder = "Ergebnis Team " + (i + 1);
         } else {
-            ergebnisbox.value = aufgerufeneSpielrunde[6 + spieleranzahl + i];
+            ergebnisbox.value = aufgerufeneSpielrunde[5 + spieleranzahl + i];
         }
 
         container.appendChild(ergebnisbox);
