@@ -666,7 +666,7 @@ function rundeOeffnen(event) {
         ergebnisbox.type = "number";
 
         //falls bereits Ergebnisse für diese Runde eingetragen wurden, werden diese jetzt angezeigt (statt des placeholders)
-        if (aufgerufeneSpielrunde[6 + spieleranzahl + i] === undefined) {
+        if (aufgerufeneSpielrunde[5 + spieleranzahl + i] === undefined) {
             ergebnisbox.placeholder = "Ergebnis Team " + (i + 1);
         } else {
             ergebnisbox.value = aufgerufeneSpielrunde[5 + spieleranzahl + i];
