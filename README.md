@@ -17,3 +17,6 @@ Die Ergebniseintragung ist für jede Spielrunde möglich. Gespeicherte Teamergeb
 
 ## Anzeige
 Es ist möglich, ein zweites Fenster zu öffnen, indem die Teams und Pausenspieler einer Spielrunde angezeigt werden. Dazu einfach die gewünschte Spielrunde bei "Anzeige für Runde" sowie die Namen der Spielfelder (freie Namenswahl) eintragen, das Anzeigefenster wird automatisch geöffnet und kann beliebig verschoben werden. Bei Änderung der anzuzeigende Runde aktualisiert sich die Anzeige automatisch.
+
+## UPDATE 24.11.2025
+Änderung, um Commit zu pushen, damit Page wieder abrufbar ist
